@@ -1,10 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.awt.event.ActionEvent;
-import java.awt.event.ActionListener;
 import java.util.Objects;
-import java.util.ArrayList;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -27,7 +24,7 @@ public class GUI {
         JPanel pane = new JPanel();
         // drop down menu
         pane.add(new JLabel("Chose cipher:"));
-        String[] simoptions1 = {"Vigenere cipher"};
+        String[] simoptions1 = {"Vigenere decipher", "Vigenere encipher"};
         JComboBox<String> combobox1 = new JComboBox<>(simoptions1);
         pane.add(combobox1);
 
@@ -55,8 +52,8 @@ public class GUI {
             Container con = frame.getContentPane();
             frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
-            // Run cipher programs
-            if (cipherselected.equals("Vigenere cipher")){
+            // Run Vigenere cipher programs
+            if (cipherselected.equals("Vigenere decipher") || cipherselected.equals("Vigenere encipher") ){
                 con.setLayout(new GridLayout(1, 1));
 
                 JPanel mainpane = new JPanel();
@@ -94,7 +91,11 @@ public class GUI {
 
                 while (true){
                     dctextold = deciphered.getText();
-                    dctextnew = vc.vigenereTransfrom(plaintext.getText(), key.getText());
+                    if (cipherselected.equals("Vigenere decipher")) {
+                        dctextnew = vc.vigenereDecipher(plaintext.getText(), key.getText());
+                    }else {
+                        dctextnew = vc.vigenereEncipher(plaintext.getText(), key.getText());
+                    }
 
                     deciphered.replaceRange(dctextnew,0, dctextold.length());
 
