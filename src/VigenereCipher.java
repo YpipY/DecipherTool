@@ -42,7 +42,7 @@ public class VigenereCipher {
      */
     private String vigenereTransfrom (String plaintext, String key, boolean decipher){
         // setup
-        StringBuilder textout = new StringBuilder("");
+        StringBuilder textout = new StringBuilder();
         plaintext = plaintext.toLowerCase();
 
         // get numbers of shifts from the key
