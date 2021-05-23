@@ -29,7 +29,7 @@ public class GUI {
         JPanel pane = new JPanel();
         // drop down menu
         pane.add(new JLabel("Chose cipher:"));
-        String[] simoptions1 = {"Monoalphabetic cipher", "Vigenere decipher", "Vigenere encipher", "Enigma"};
+        String[] simoptions1 = {"Monoalphabetic cipher", "Vigenere decipher", "Vigenere encipher", "Enigma", "Binary with key"};
         JComboBox<String> combobox1 = new JComboBox<>(simoptions1);
         pane.add(combobox1);
 
@@ -276,6 +276,69 @@ public class GUI {
                     TimeUnit.MILLISECONDS.sleep(100);
                 } catch (InterruptedException exception) {
                     exception.printStackTrace();
+                    System.exit(-1);
+                }
+            }
+        } else if (cipherselected.equals("Binary with key")){
+            //Integer.toBinaryString()
+            con.setLayout(new GridLayout(1, 1));
+
+            JPanel mainpane = new JPanel();
+            mainpane.setLayout(new GridLayout(3, 1, 0, 10));
+            mainpane.setBorder(new EmptyBorder(10, 10, 10, 10));
+            con.add(mainpane);
+
+            // Cipher key text field
+            JPanel pane0 = new JPanel();
+            pane0.setLayout(new GridLayout(0, 2));
+            pane0.add(new JLabel("key: "));
+            JTextField key = new JTextField("");
+            key.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            pane0.add(key);
+
+            pane0.add(new JLabel("binary: "));
+            JTextField binary = new JTextField("");
+            binary.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            pane0.add(binary);
+
+            JButton addbin = new JButton("add ");
+            JTextArea plaintext = new JTextArea("");
+            //addbin.addActionListener(e -> System.out.println(((byte) (Integer.parseInt(binary.getText(), 2)))));
+            addbin.addActionListener(e -> plaintext.setText(plaintext.getText() + ((char)(Integer.parseInt(binary.getText(), 2)))));
+            pane0.add(addbin);
+            mainpane.add(pane0);
+
+            JButton obot = new JButton("Output text");
+            obot.addActionListener(e -> outputText());
+            pane0.add(obot);
+            mainpane.add(pane0);
+
+            // Cipher plain text
+            plaintext.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            mainpane.add(plaintext);
+
+            // Deciphered/enciphered text
+            JTextArea ciphertext = new JTextArea("");
+            ciphertext.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            ciphertext.setEditable(false);
+            mainpane.add(ciphertext);
+
+            // Draw frame
+            frame.setVisible(true);
+
+            BinaryCipher bc = new BinaryCipher();
+
+            // Loops the program until closed
+            while (true) {
+                ctextold = ciphertext.getText();
+                ctextnew = bc.transform(key.getText(),plaintext.getText());
+
+                ciphertext.replaceRange(ctextnew, 0, ctextold.length());
+
+                try {
+                    TimeUnit.MILLISECONDS.sleep(100);
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
                     System.exit(-1);
                 }
             }

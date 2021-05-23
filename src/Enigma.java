@@ -67,6 +67,11 @@ public class Enigma {
         rewi.replace(letter2, letter1);
     }
 
+    /**
+     * Transforms the plaintext according to the Enigma machine
+     * @param plaintext the enciphered or unenciphered text
+     * @return transformed plaintext
+     */
     public String transform (String plaintext) {
         plaintext = plaintext.toLowerCase();
         StringBuilder textout = new StringBuilder();
