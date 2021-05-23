@@ -1,8 +1,7 @@
 import javax.swing.*;
 import javax.swing.border.EmptyBorder;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.Objects;
+import java.util.*;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -30,7 +29,7 @@ public class GUI {
         JPanel pane = new JPanel();
         // drop down menu
         pane.add(new JLabel("Chose cipher:"));
-        String[] simoptions1 = {"Monoalphabetic cipher", "Vigenere decipher", "Vigenere encipher"};
+        String[] simoptions1 = {"Monoalphabetic cipher", "Vigenere decipher", "Vigenere encipher", "Enigma"};
         JComboBox<String> combobox1 = new JComboBox<>(simoptions1);
         pane.add(combobox1);
 
@@ -59,7 +58,7 @@ public class GUI {
         frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
 
 
-        if (cipherselected.equals("Vigenere decipher") || cipherselected.equals("Vigenere encipher")) {                     // Run Vigenere cipher programs
+        if (cipherselected.equals("Vigenere decipher") || cipherselected.equals("Vigenere encipher")) {                 // Run Vigenere cipher programs
             con.setLayout(new GridLayout(1, 1));
 
             JPanel mainpane = new JPanel();
@@ -113,7 +112,7 @@ public class GUI {
                     System.exit(-1);
                 }
             }
-        } else if (cipherselected.equals("Monoalphabetic cipher")) {  // Run monoalphabetic cipher programs
+        } else if (cipherselected.equals("Monoalphabetic cipher")) {                                                    // Run monoalphabetic cipher programs
             con.setLayout(new GridLayout(1, 1));
 
             JPanel mainpane = new JPanel();
@@ -161,18 +160,120 @@ public class GUI {
                 ctextold = ciphertext.getText();
                 for (int i= 97; i < 123; i++){
                     if (jtexts.get(i-97).getText().length() == 0){
-                        mac.addLetter((char) i, '-');
+                        mac.addEncoding((char) i, '-');
                     } else{
-                        mac.addLetter((char) i, jtexts.get(i-97).getText().charAt(0));
+                        mac.addEncoding((char) i, jtexts.get(i-97).getText().charAt(0));
                     }
                 }
 
-                ctextnew = mac.outputText(plaintext.getText());
+                ctextnew = mac.transform(plaintext.getText());
 
                 ciphertext.replaceRange(ctextnew, 0, ctextold.length());
 
                 try {
-                    TimeUnit.MILLISECONDS.sleep(500);
+                    TimeUnit.MILLISECONDS.sleep(100);
+                } catch (InterruptedException exception) {
+                    exception.printStackTrace();
+                    System.exit(-1);
+                }
+            }
+        } else if (cipherselected.equals("Enigma")) {                                                                   // Run Enigma cipher
+            frame.setSize(800, 800);
+            con.setLayout(new GridLayout(1, 1));
+
+            JPanel mainpane = new JPanel();
+            mainpane.setLayout(new GridLayout(3, 1, 0, 10));
+            mainpane.setBorder(new EmptyBorder(10, 10, 10, 10));
+            con.add(mainpane);
+
+            // Cipher key text field
+            JPanel pane0 = new JPanel();
+            pane0.setLayout(new GridLayout(0, 2));
+
+            pane0.add(new JLabel("Scrambler 1 top: "));
+            JTextField scr11 = new JTextField("abcdefghijklmnopqrstuvwxyz");
+            scr11.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            pane0.add(scr11);
+
+            pane0.add(new JLabel("Scrambler 1 bottom: "));
+            JTextField scr12 = new JTextField("");
+            scr12.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            pane0.add(scr12);
+
+            pane0.add(new JLabel("Scrambler 2 top: "));
+            JTextField scr21 = new JTextField("abcdefghijklmnopqrstuvwxyz");
+            scr21.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            pane0.add(scr21);
+
+            pane0.add(new JLabel("Scrambler 2 bottom: "));
+            JTextField scr22 = new JTextField("");
+            scr22.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            pane0.add(scr22);
+
+            pane0.add(new JLabel("Scrambler 3 top: "));
+            JTextField scr31 = new JTextField("abcdefghijklmnopqrstuvwxyz");
+            scr31.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            pane0.add(scr31);
+
+            pane0.add(new JLabel("Scrambler 3 bottom: "));
+            JTextField scr32 = new JTextField("");
+            scr32.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            pane0.add(scr32);
+
+            pane0.add(new JLabel("Reflector 1 top: "));
+            JTextField ref1 = new JTextField("abcdefghijklmnopqrstuvwxyz");
+            ref1.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            pane0.add(ref1);
+
+            pane0.add(new JLabel("Reflector 2 top: "));
+            JTextField ref2 = new JTextField("");
+            ref2.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            pane0.add(ref2);
+
+            pane0.add(new JLabel("Rewiring/plugboard eg. (ab de cd uv ...): "));
+            JTextField rew = new JTextField("");
+            rew.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            pane0.add(rew);
+
+            JButton obot = new JButton("Output text");
+            obot.addActionListener(e -> outputText());
+            pane0.add(obot);
+            mainpane.add(pane0);
+
+            // Cipher plain text
+            JTextArea plaintext = new JTextArea("");
+            plaintext.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            mainpane.add(plaintext);
+
+            // Deciphered/enciphered text
+            JTextArea ciphertext = new JTextArea("");
+            ciphertext.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+            ciphertext.setEditable(false);
+            mainpane.add(ciphertext);
+
+            // Draw frame
+            frame.setVisible(true);
+
+            Enigma eni = new Enigma();
+
+            // Loops the program until closed
+            while (true) {
+                ctextold = ciphertext.getText();
+
+                eni.setScrambler(scr11.getText(),scr12.getText(),scr21.getText(),scr22.getText(),scr31.getText(),scr32.getText(),ref1.getText(),ref2.getText());
+
+                eni.resetRewiring();
+                String rewt = rew.getText().toLowerCase();
+                for (int i = 1; i < rewt.length(); i = i + 3){
+                    eni.rewiring(rewt.charAt(i - 1), rewt.charAt(i));
+                }
+
+                ctextnew = eni.transform(plaintext.getText());
+
+                ciphertext.replaceRange(ctextnew, 0, ctextold.length());
+
+                try {
+                    TimeUnit.MILLISECONDS.sleep(100);
                 } catch (InterruptedException exception) {
                     exception.printStackTrace();
                     System.exit(-1);

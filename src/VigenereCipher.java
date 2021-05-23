@@ -1,4 +1,4 @@
-import java.util.*;
+import java.util.ArrayList;
 
 /**
  * Class for transforming a Vigenere cipher
@@ -7,7 +7,7 @@ import java.util.*;
 public class VigenereCipher {
 
     /**
-     * Constructor of the Vigenere Cipher class
+     * Constructor of the Vigenere cipher class
      */
     public VigenereCipher() {
     }
@@ -19,7 +19,7 @@ public class VigenereCipher {
      * @return deciphered text
      */
     public String vigenereDecipher(String plaintext, String key){
-        return vigenereTransfrom(plaintext, key, true);
+        return transform(plaintext, key, true);
     }
 
     /**
@@ -29,8 +29,7 @@ public class VigenereCipher {
      * @return enciphered text
      */
     public String vigenereEncipher (String plaintext, String key){
-        return vigenereTransfrom(plaintext, key, false);
-
+        return transform(plaintext, key, false);
     }
 
     /**
@@ -40,7 +39,7 @@ public class VigenereCipher {
      * @param decipher true if it should decipher
      * @return Transformed text
      */
-    private String vigenereTransfrom (String plaintext, String key, boolean decipher){
+    private String transform(String plaintext, String key, boolean decipher){
         // setup
         StringBuilder textout = new StringBuilder();
         plaintext = plaintext.toLowerCase();

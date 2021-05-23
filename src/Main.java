@@ -1,6 +1,6 @@
 // Decipher tool
 // Author: Simon Moeller Nielsen
-// Date: 22/05 2021
+// Date: 23/05 2021
 
 /**
  * Main class. Only for initial setup

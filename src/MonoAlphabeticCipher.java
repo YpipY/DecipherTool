@@ -6,6 +6,7 @@ import java.util.HashMap;
 
 public class MonoAlphabeticCipher {
         HashMap<Character,Character> encodings = new HashMap<>();
+
         /**
          * Constructor of the mono alphabetic cipher class
          */
@@ -16,18 +17,27 @@ public class MonoAlphabeticCipher {
                 }
         }
 
-        public void addLetter(char key, char letter){
+        /**
+         * Add the encoding for the key
+         * @param key the letter in the plain text
+         * @param letter the letter in the deciphered/enciphered text
+         */
+        public void addEncoding(char key, char letter){
                 encodings.replace(key, letter);
         }
 
-        public String outputText(String plaintext){
+        /**
+         * Output the entire text according to the encoding that have been given so far
+         * @param plaintext the enciphered or unenciphered text
+         * @return Transformed text
+         */
+        public String transform(String plaintext){
                 plaintext = plaintext.toLowerCase();
                 for (int i= 97; i < 123; i++){
                         if (encodings.get((char) i) != '-') {
                                 plaintext = plaintext.replace((char) i, Character.toUpperCase(encodings.get((char) i)));
                         }
                 }
-
                 return plaintext;
         }
 
