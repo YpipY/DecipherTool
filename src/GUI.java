@@ -21,26 +21,46 @@ public class GUI {
      * Setup of choosing cipher type
      */
     private void cipherOptions() {
-        JFrame frame = new JFrame();
-        JPanel pane = new JPanel();
-        // drop down menu
-        pane.add(new JLabel("Chose cipher:"));
-        String[] simoptions1 = {"Monoalphabetic cipher", "Vigenere decipher", "Vigenere encipher", "Enigma", "Binary with key"};
-        JComboBox<String> combobox1 = new JComboBox<>(simoptions1);
-        pane.add(combobox1);
+        JFrame optionsframe = new JFrame("Select cipher");
+        optionsframe.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
+        optionsframe.setSize(200, 300);
 
-        // drawing the choosing cipher type menu
-        int options = JOptionPane.showConfirmDialog(frame, pane, "Select cipher", JOptionPane.OK_CANCEL_OPTION);
+        // cipher selection
+        JPanel optionspane = new JPanel();
+        optionspane.setLayout(new GridLayout(4, 1));
 
-        // getting selection
-        String cipherselected = Objects.requireNonNull(combobox1.getSelectedItem()).toString();
+        JButton mon = new JButton("Monoalphabetic cipher");
+        mon.addActionListener(arg0 -> {
+            Thread thread0 = new Thread(() -> runCipher("Monoalphabetic cipher"));
+            thread0.start();
+        });
 
-        // Check if cancel or the exit bottom what clicked, if so close the program
-        if (options != 0) {
-            System.exit(0);
-        } else {
-                runCipher(cipherselected);
-        }
+        JButton vig = new JButton("Vigenere cipher");
+        vig.addActionListener(arg1 -> {
+            Thread thread1 = new Thread(() -> runCipher("Vigenere cipher"));
+            thread1.start();
+        });
+
+        JButton eni = new JButton("Enigma");
+        eni.addActionListener(arg2 -> {
+            Thread thread2 = new Thread(() -> runCipher("Enigma"));
+            thread2.start();
+        });
+
+        JButton bin = new JButton("Binary with key");
+        bin.addActionListener(arg3 -> {
+            Thread thread3 = new Thread(() -> runCipher("Binary with key"));
+            thread3.start();
+        });
+
+        optionspane.add(mon);
+        optionspane.add(vig);
+        optionspane.add(eni);
+        optionspane.add(bin);
+        optionsframe.add(optionspane);
+
+        // draw frame
+        optionsframe.setVisible(true);
     }
 
     /**
@@ -48,19 +68,17 @@ public class GUI {
      * @param cipherselected chosen cipher
      */
     private void runCipher(String cipherselected) {
-        JFrame frame = new JFrame(cipherselected);
-        frame.setSize(800, 600);
-        Container con = frame.getContentPane();
-        frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-
+        JFrame cipherframe = new JFrame(cipherselected);
+        cipherframe.setSize(800, 600);
+        Container con = cipherframe.getContentPane();
 
         switch (cipherselected) {
-            case "Vigenere decipher":
-            case "Vigenere encipher": {                                                                                 // Run Vigenere cipher
+            case "Vigenere cipher": {                                                                                 // Run Vigenere cipher
+                cipherframe.setSize(800, 800);
                 con.setLayout(new GridLayout(1, 1));
 
                 JPanel mainpane = new JPanel();
-                mainpane.setLayout(new GridLayout(3, 1, 0, 10));
+                mainpane.setLayout(new GridLayout(4, 1, 0, 10));
                 mainpane.setBorder(new EmptyBorder(10, 10, 10, 10));
                 con.add(mainpane);
 
@@ -71,11 +89,15 @@ public class GUI {
                 JTextField key = new JTextField("");
                 key.setFont(new Font("Lucida Console", Font.PLAIN, 14));
                 pane0.add(key);
-                JButton obot = new JButton("Output text");
+                JButton obot = new JButton("Output top text");
+                JButton obotb = new JButton("Output bottom text");
 
                 JTextArea ciphertext = new JTextArea("");
+                JTextArea enciphertext = new JTextArea("");
                 obot.addActionListener(e -> outputText(ciphertext));
                 pane0.add(obot);
+                obotb.addActionListener(e -> outputText(enciphertext));
+                pane0.add(obotb);
                 mainpane.add(pane0);
 
                 // Cipher plain text
@@ -88,18 +110,20 @@ public class GUI {
                 ciphertext.setEditable(false);
                 mainpane.add(ciphertext);
 
+                enciphertext.setFont(new Font("Lucida Console", Font.PLAIN, 14));
+                enciphertext.setEditable(false);
+                mainpane.add(enciphertext);
+
                 // Draw frame
-                frame.setVisible(true);
+                cipherframe.setVisible(true);
 
                 VigenereCipher vc = new VigenereCipher();
 
                 // Loops the program until closed
                 while (true) {
-                    if (cipherselected.equals("Vigenere decipher")) {
-                        ciphertext.setText(vc.vigenereDecipher(plaintext.getText(), key.getText()));
-                    } else {
-                        ciphertext.setText(vc.vigenereEncipher(plaintext.getText(), key.getText()));
-                    }
+
+                    ciphertext.setText(vc.vigenereDecipher(plaintext.getText(), key.getText()));
+                    enciphertext.setText(vc.vigenereEncipher(plaintext.getText(), key.getText()));
 
                     try {
                         TimeUnit.MILLISECONDS.sleep(100);
@@ -133,7 +157,7 @@ public class GUI {
 
                 JTextArea ciphertext = new JTextArea("");
                 JButton obot = new JButton("Output text");
-                obot.addActionListener(event -> outputText(ciphertext));
+                obot.addActionListener(e -> outputText(ciphertext));
                 pane0.add(obot);
                 mainpane.add(pane0);
 
@@ -148,9 +172,10 @@ public class GUI {
                 mainpane.add(ciphertext);
 
                 // Draw frame
-                frame.setVisible(true);
+                cipherframe.setVisible(true);
 
                 MonoAlphabeticCipher mac = new MonoAlphabeticCipher();
+
 
                 // Loops the program until closed
                 while (true) {
@@ -166,6 +191,7 @@ public class GUI {
 
                     try {
                         TimeUnit.MILLISECONDS.sleep(100);
+
                     } catch (InterruptedException exception) {
                         exception.printStackTrace();
                         System.exit(-1);
@@ -173,7 +199,7 @@ public class GUI {
                 }
             }
             case "Enigma": {                                                                                            // Run Enigma cipher
-                frame.setSize(800, 800);
+                cipherframe.setSize(800, 800);
                 con.setLayout(new GridLayout(1, 1));
 
                 JPanel mainpane = new JPanel();
@@ -247,7 +273,7 @@ public class GUI {
                 mainpane.add(ciphertext);
 
                 // Draw frame
-                frame.setVisible(true);
+                cipherframe.setVisible(true);
 
                 Enigma eni = new Enigma();
 
@@ -298,7 +324,9 @@ public class GUI {
                 JTextArea ciphertext = new JTextArea("");
 
                 JButton addbin = new JButton("Add binary");
-                addbin.addActionListener(e -> plaintext.setText(plaintext.getText() + ((char) (Integer.parseInt(binary.getText().replaceAll("\\s+", ""), 2)))));
+                addbin.addActionListener(e -> plaintext.setText(plaintext.getText() + ((char) parseToBinary(binary.getText().replaceAll("\\s+", "")))));
+                JButton addchar = new JButton("Add char");
+                addchar.addActionListener(e -> plaintext.setText(plaintext.getText() + String.format("%8s", Integer.toBinaryString(binary.getText().charAt(0))).replace(' ', '0')));
                 JButton obot = new JButton("Output text");
                 obot.addActionListener(e -> outputText(ciphertext));
                 JButton xorgate = new JButton("XOR gate");
@@ -307,6 +335,7 @@ public class GUI {
                 ver.addActionListener(e -> ciphertext.setText(bc.vShiftTransform(key.getText(), plaintext.getText())));
                 pane0.add(obot);
                 pane0.add(addbin);
+                pane0.add(addchar);
                 pane0.add(xorgate);
                 pane0.add(ver);
                 mainpane.add(pane0);
@@ -321,7 +350,7 @@ public class GUI {
                 mainpane.add(ciphertext);
 
                 // Draw frame
-                frame.setVisible(true);
+                cipherframe.setVisible(true);
 
                 // Loops the program until closed
                 while (true) {
@@ -354,4 +383,18 @@ public class GUI {
         outframe.add(outpane);
         outframe.setVisible(true);
     }
+
+    /**
+     * Parses a string to int or catches the exception
+     * @param s String to be parsed
+     * @return The int value found in the string
+     */
+    private int parseToBinary(String s) {
+        try {
+            return Integer.parseInt(s, 2);
+        } catch (NumberFormatException e) {
+            return 33;
+        }
+    }
+
 }
